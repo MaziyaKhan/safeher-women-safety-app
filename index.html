@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>SafeHer — Women Safety App</title>
+  <style>
+/* ══════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════ */
+:root {
+  --red: #E63946;
+  --red2: #c1121f;
+  --red3: #ff6b6b;
+  --pink: #ff8fab;
+  --blue: #3a86ff;
+  --orange: #fb8500;
+  --white: #fff;
+  --bg: #fff5f5;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #8d99ae;
+  --shadow: 0 8px 32px rgba(230,57,70,0.15);
+  --r: 22px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  max-width:420px;
+  margin:0 auto;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+/* ══════════════════════════════════════
+   SCREENS
+══════════════════════════════════════ */
+.screen{display:none;flex-direction:column;height:100vh;overflow-y:auto;position:relative;padding-bottom:80px;}
+.screen.active{display:flex;}
+
+/* ══════════════════════════════════════
+   SPLASH
+══════════════════════════════════════ */
+#splash{
+  background:linear-gradient(160deg,#e63946 0%,#9d0208 100%);
+  align-items:center;justify-content:center;padding-bottom:0;overflow:hidden;
+}
+.splash-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,0.07);}
+.orb1{width:340px;height:340px;top:-120px;right:-100px;}
+.orb2{width:220px;height:220px;bottom:-60px;left:-60px;}
+.splash-content{text-align:center;z-index:2;animation:fadeUp .8s ease;}
+.splash-logo{position:relative;display:inline-block;margin-bottom:20px;}
+.logo-ring{
+  width:100px;height:100px;border-radius:50%;
+  border:3px solid rgba(255,255,255,0.3);
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:spinRing 4s linear infinite;
+}
+@keyframes spinRing{to{transform:translate(-50%,-50%) rotate(360deg);}}
+.logo-emoji{font-size:72px;display:block;}
+.splash-title{font-family:'Playfair Display',serif;font-size:48px;color:#fff;font-weight:900;letter-spacing:-1px;}
+.splash-tagline{color:rgba(255,255,255,0.75);font-size:15px;margin-top:8px;}
+.splash-dots{display:flex;gap:8px;justify-content:center;margin-top:40px;}
+.splash-dots span{
+  width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);
+  animation:dotPulse 1.4s ease infinite;
+}
+.splash-dots span:nth-child(2){animation-delay:.2s;}
+.splash-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.8);opacity:.5}40%{transform:scale(1.2);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════
+   LOGIN
+══════════════════════════════════════ */
+#login{padding-bottom:0;overflow-y:auto;}
+.login-bg{position:absolute;top:0;left:0;right:0;height:220px;background:linear-gradient(160deg,var(--red),var(--red2));border-radius:0 0 40px 40px;}
+.login-content{position:relative;z-index:1;padding:60px 24px 40px;}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+.login-logo span{font-size:36px;}
+.login-logo h2{font-family:'Playfair Display',serif;font-size:28px;color:#fff;font-weight:900;}
+.login-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:6px;}
+.login-sub{font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:28px;}
+.login-form{background:#fff;border-radius:28px;padding:24px;box-shadow:var(--shadow);}
+.login-btn{
+  width:100%;padding:16px;margin-top:8px;
+  background:linear-gradient(135deg,var(--red3),var(--red2));
+  border:none;border-radius:16px;color:#fff;
+  font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 8px 24px rgba(230,57,70,0.35);
+}
+
+/* ══════════════════════════════════════
+   FORMS (shared)
+══════════════════════════════════════ */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-group label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.form-group input,.form-group select,.form-group textarea{
+  background:#f8f8f8;border:2px solid transparent;border-radius:14px;
+  padding:13px 16px;font-size:15px;font-weight:600;
+  font-family:'Nunito',sans-serif;color:var(--text);
+  outline:none;transition:border-color .2s,background .2s;
+  width:100%;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--red);background:#fff;
+}
+
+/* ══════════════════════════════════════
+   HOME HEADER
+══════════════════════════════════════ */
+.home-header{display:flex;justify-content:space-between;align-items:center;padding:48px 20px 16px;}
+.user-greet{display:flex;align-items:center;gap:12px;}
+.user-avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red3),var(--red));
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  box-shadow:0 4px 14px rgba(230,57,70,0.35);
+}
+.greet-text{font-size:12px;color:var(--muted);}
+.greet-name{font-size:20px;font-weight:900;}
+.header-actions{display:flex;gap:8px;}
+.hdr-btn{
+  width:40px;height:40px;background:#fff;border:none;border-radius:12px;
+  cursor:pointer;font-size:16px;color:var(--muted);
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:color .2s;
+}
+.hdr-btn:hover{color:var(--red);}
+
+/* ══════════════════════════════════════
+   SOS CARD
+══════════════════════════════════════ */
+.sos-card{
+  margin:0 16px;background:#fff;border-radius:28px;
+  padding:24px 20px;box-shadow:var(--shadow);text-align:center;
+}
+.sos-card-label{font-size:20px;font-weight:900;}
+.sos-card-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ══════════════════════════════════════
+   3D SOS BUTTON
+══════════════════════════════════════ */
+.sos-scene{
+  position:relative;width:200px;height:200px;
+  margin:20px auto 14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.sos-pulse-ring{
+  position:absolute;border-radius:50%;
+  background:rgba(230,57,70,0.08);
+  animation:sosPulse 2.5s ease-in-out infinite;
+}
+.r1{width:200px;height:200px;animation-delay:0s;}
+.r2{width:165px;height:165px;animation-delay:.3s;background:rgba(230,57,70,0.1);}
+.r3{width:132px;height:132px;animation-delay:.6s;background:rgba(230,57,70,0.13);}
+@keyframes sosPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.6}}
+
+.sos-3d-wrap{position:relative;z-index:2;}
+.sos-3d-btn{
+  position:relative;
+  width:112px;height:112px;
+  border:none;cursor:pointer;
+  background:transparent;
+  padding:0;
+  transform-style:preserve-3d;
+  transition:transform .1s;
+}
+.sos-3d-btn:active{transform:translateY(6px);}
+.sos-3d-top{
+  width:112px;height:112px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #ff6b6b, #c1121f);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,0.15),
+    0 8px 0 rgba(139,0,0,0.6),
+    0 12px 32px rgba(230,57,70,0.6),
+    inset 0 2px 6px rgba(255,255,255,0.3);
+  transition:box-shadow .1s, transform .1s;
+}
+.sos-3d-btn:active .sos-3d-top{
+  box-shadow:0 0 0 4px rgba(255,255,255,0.15),0 2px 0 rgba(139,0,0,0.6),0 4px 16px rgba(230,57,70,0.5),inset 0 2px 6px rgba(255,255,255,0.2);
+  transform:translateY(4px);
+}
+.sos-3d-side{
+  position:absolute;bottom:-8px;left:4px;right:4px;height:16px;
+  background:radial-gradient(ellipse at center, rgba(139,0,0,0.7), transparent);
+  border-radius:50%;filter:blur(6px);z-index:1;
+}
+.sos-label{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:900;color:#fff;
+  letter-spacing:3px;text-shadow:0 2px 6px rgba(0,0,0,0.3);
+  z-index:3;position:relative;
+}
+.sos-progress-ring{
+  position:absolute;inset:-6px;
+  width:124px;height:124px;
+}
+.sos-progress-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.sos-ring-bg{fill:none;stroke:rgba(255,255,255,0.15);stroke-width:3;}
+.sos-ring-fill{
+  fill:none;stroke:#fff;stroke-width:3;
+  stroke-dasharray:283;stroke-dashoffset:283;
+  stroke-linecap:round;
+  transition:stroke-dashoffset .05s linear;
+}
+
+.loc-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--bg);border-radius:99px;
+  padding:8px 16px;font-size:12px;font-weight:700;color:var(--text);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.loc-pill i{color:var(--red);flex-shrink:0;}
+
+/* ══════════════════════════════════════
+   QUICK ACTIONS
+══════════════════════════════════════ */
+.section-wrap{padding:18px 16px 0;}
+.sec-title{font-size:17px;font-weight:900;margin-bottom:12px;}
+.actions-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.act-btn{
+  background:#fff;border:none;border-radius:20px;
+  padding:14px 6px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);
+  transition:transform .15s;font-family:'Nunito',sans-serif;
+}
+.act-btn:active{transform:scale(0.93);}
+.act-ico{
+  width:44px;height:44px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;
+}
+.a-red{background:linear-gradient(135deg,#ff6b6b,#c1121f);}
+.a-pink{background:linear-gradient(135deg,#ffb3c6,#ff4d6d);}
+.a-blue{background:linear-gradient(135deg,#74c0fc,#3a86ff);}
+.a-orange{background:linear-gradient(135deg,#ffd166,#fb8500);}
+.act-btn span{font-size:11px;font-weight:800;color:var(--text);}
+
+/* ══════════════════════════════════════
+   CHECK-IN BANNER
+══════════════════════════════════════ */
+.checkin-banner{
+  margin:14px 16px 0;background:#fff;border-radius:20px;
+  padding:16px 18px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);cursor:pointer;
+  border-left:4px solid var(--red);
+}
+.checkin-icon{
+  width:42px;height:42px;background:linear-gradient(135deg,var(--red3),var(--red));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;flex-shrink:0;
+}
+.checkin-title{font-size:14px;font-weight:800;}
+.checkin-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.checkin-arrow{color:var(--muted);margin-left:auto;}
+
+/* ══════════════════════════════════════
+   BOTTOM NAV
+══════════════════════════════════════ */
+.bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:420px;background:#fff;
+  display:flex;justify-content:space-around;
+  padding:10px 0 22px;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.07);z-index:100;
+}
+.nav-btn{
+  background:none;border:none;display:flex;flex-direction:column;
+  align-items:center;gap:3px;cursor:pointer;padding:4px 12px;
+  color:var(--muted);font-family:'Nunito',sans-serif;
+  font-size:10px;font-weight:700;transition:color .2s;
+}
+.nav-btn i{font-size:19px;}
+.nav-btn.active{color:var(--red);}
+
+/* ══════════════════════════════════════
+   SCREEN HEADER
+══════════════════════════════════════ */
+.screen-hdr{
+  display:flex;align-items:center;padding:48px 16px 16px;gap:12px;
+}
+.screen-hdr h2{font-size:22px;font-weight:900;flex:1;}
+.back-btn{
+  width:40px;height:40px;background:#fff;border:none;
+  border-radius:12px;cursor:pointer;font-size:16px;color:var(--text);
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.add-btn{
+  width:40px;height:40px;background:var(--red);border:none;
+  border-radius:12px;cursor:pointer;font-size:16px;color:#fff;
+  box-shadow:0 4px 12px rgba(230,57,70,0.3);
+}
+
+/* ══════════════════════════════════════
+   SOS ACTIVE
+══════════════════════════════════════ */
+#sos-active{background:linear-gradient(160deg,#e63946 0%,#7b0d1e 100%);padding-bottom:0;}
+.sos-active-bg{position:absolute;inset:0;overflow:hidden;}
+.sos-wave{
+  position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,0.1);
+  animation:waveOut 3s ease-out infinite;
+}
+.w1{width:300px;height:300px;top:-100px;left:-100px;}
+.w2{width:400px;height:400px;bottom:-150px;right:-150px;animation-delay:1s;}
+@keyframes waveOut{0%{transform:scale(0.8);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+.sos-active-body{
+  position:relative;z-index:1;display:flex;flex-direction:column;
+  align-items:center;padding:50px 24px 40px;text-align:center;color:#fff;
+}
+.sos-ambulance{font-size:72px;margin-bottom:20px;animation:bounce 1s ease infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.sos-active-body h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;margin-bottom:10px;}
+.sos-active-body p{font-size:14px;opacity:.85;line-height:1.6;}
+.alert-checklist{
+  background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);
+  border-radius:20px;padding:18px 22px;margin:24px 0;width:100%;
+}
+.chk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;font-size:14px;font-weight:700;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.chk-item:last-child{border:none;}
+.chk-dot{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(255,255,255,0.2);flex-shrink:0;
+  transition:background .3s;
+}
+.chk-dot.done{background:#5cb85c;box-shadow:0 0 8px rgba(92,184,92,0.6);}
+.sos-timer-display{
+  font-size:14px;font-weight:700;opacity:.8;margin-bottom:24px;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-cancel-sos{
+  width:100%;padding:16px;background:rgba(255,255,255,0.15);
+  border:2px solid rgba(255,255,255,0.35);color:#fff;border-radius:16px;
+  font-size:16px;font-weight:800;cursor:pointer;
+  font-family:'Nunito',sans-serif;margin-bottom:12px;
+}
+.btn-see-map{
+  width:100%;padding:16px;background:#fff;border:none;
+  color:var(--red);border-radius:16px;font-size:16px;font-weight:800;
+  cursor:pointer;font-family:'Nunito',sans-serif;
+}
+
+/* ══════════════════════════════════════
+   MAP
+══════════════════════════════════════ */
+.map-box{
+  flex:1;margin:0 16px;background:#e8e8e8;
+  border-radius:24px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;min-height:280px;
+}
+.map-ph{text-align:center;color:var(--muted);}
+.map-ph i{font-size:48px;color:var(--red);margin-bottom:12px;display:block;}
+.map-ph p{font-size:15px;font-weight:700;}
+.map-card{
+  margin:14px 16px;background:#fff;border-radius:20px;
+  padding:16px 18px;box-shadow:var(--shadow);
+}
+.map-card-row{display:flex;align-items:center;gap:12px;}
+.map-avatar{
+  width:46px;height:46px;background:var(--bg);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.map-name{font-size:15px;font-weight:800;}
+.map-dist{font-size:12px;color:var(--red);margin-top:2px;}
+.call-pill{
+  margin-left:auto;background:var(--red);color:#fff;border:none;
+  border-radius:12px;padding:10px 14px;font-size:13px;font-weight:800;
+  cursor:pointer;font-family:'Nunito',sans-serif;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ══════════════════════════════════════
+   CONTACTS
+══════════════════════════════════════ */
+.contacts-wrap{padding:0 16px;display:flex;flex-direction:column;gap:12px;}
+.contact-card{
+  background:#fff;border-radius:20px;padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);
+  animation:fadeUp .3s ease;
+}
+.contact-ava{
+  width:50px;height:50px;border-radius:16px;
+  background:linear-gradient(135deg,var(--red3),var(--red));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;font-weight:900;
+}
+.contact-info{flex:1;}
+.contact-name{font-size:16px;font-weight:800;}
+.contact-phone{font-size:12px;color:var(--muted);margin-top:2px;}
+.c-actions{display:flex;gap:8px;}
+.c-call,.c-del{
+  width:36px;height:36px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+}
+.c-call{background:var(--red);color:#fff;}
+.c-del{background:#fff0f0;color:var(--red);}
+
+/* ══════════════════════════════════════
+   FAKE CALL
+══════════════════════════════════════ */
+.fakecall-wrap{padding:0 16px;}
+.fakecall-illus{font-size:64px;text-align:center;margin-bottom:16px;display:block;}
+.fakecall-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px;text-align:center;}
+.call-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;}
+.call-screen.hidden{display:none;}
+.call-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);}
+.call-card{
+  position:relative;z-index:1;background:#fff;border-radius:32px;
+  padding:36px 28px;text-align:center;width:290px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.3);animation:slideUp .4s ease;
+}
+.dark-call{background:rgba(0,0,0,0.85);}
+.dark-card{background:#1a1a2e;color:#fff;}
+.dark-card h3{color:#fff;}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.call-avatar-big{font-size:64px;margin-bottom:14px;display:block;}
+.call-card h3{font-size:22px;font-weight:900;}
+.call-status-text{color:var(--muted);font-size:14px;margin-top:6px;}
+.call-timer{font-size:22px;font-weight:800;color:var(--red);margin-top:6px;}
+.call-btns{display:flex;justify-content:center;gap:20px;margin-top:28px;}
+.call-decline,.call-accept,.call-mute,.call-speaker{
+  width:58px;height:58px;border-radius:50%;border:none;font-size:20px;cursor:pointer;
+}
+.call-decline{background:#ff4444;color:#fff;}
+.call-accept{background:#44cc44;color:#fff;}
+.call-mute,.call-speaker{background:rgba(255,255,255,0.12);color:#fff;}
+
+/* ══════════════════════════════════════
+   POLICE
+══════════════════════════════════════ */
+.police-wrap{padding:0 16px;display:flex;flex-direction:column;gap:14px;}
+.blue-btn{background:linear-gradient(135deg,#74c0fc,#3a86ff) !important;}
+.outline-btn{
+  background:#fff !important;color:var(--red) !important;
+  border:2px solid var(--red) !important;
+  box-shadow:none !important;
+}
+.police-list{display:flex;flex-direction:column;gap:12px;}
+.police-card{
+  background:#fff;border-radius:18px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);
+}
+.police-ico{
+  width:44px;height:44px;background:var(--bg);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.police-name{font-size:14px;font-weight:800;}
+.police-dist{font-size:12px;color:var(--red);margin-top:2px;}
+
+/* ══════════════════════════════════════
+   CHECK-IN
+══════════════════════════════════════ */
+.checkin-wrap{padding:0 16px;}
+.checkin-illus{font-size:64px;text-align:center;margin-bottom:16px;display:block;}
+.checkin-info{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px;text-align:center;}
+.checkin-active{text-align:center;padding:20px 0;}
+.checkin-countdown{
+  font-family:'Playfair Display',serif;
+  font-size:72px;font-weight:900;color:var(--red);
+  line-height:1;margin-bottom:8px;
+}
+.checkin-running{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.safe-btn{
+  width:100%;padding:16px;background:linear-gradient(135deg,#5cb85c,#3d9140);
+  border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:800;
+  font-family:'Nunito',sans-serif;cursor:pointer;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.stop-btn{
+  width:100%;padding:14px;background:#fff0f0;border:none;border-radius:16px;
+  color:var(--red);font-size:15px;font-weight:800;
+  font-family:'Nunito',sans-serif;cursor:pointer;
+}
+
+/* ══════════════════════════════════════
+   INCIDENTS
+══════════════════════════════════════ */
+.incidents-wrap{padding:0 16px;display:flex;flex-direction:column;gap:12px;}
+.incident-card{
+  background:#fff;border-radius:20px;padding:16px 18px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);animation:fadeUp .3s ease;
+}
+.inc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.inc-badge{
+  padding:4px 12px;border-radius:99px;font-size:11px;font-weight:800;
+  background:rgba(230,57,70,0.1);color:var(--red);
+}
+.inc-date{font-size:11px;color:var(--muted);margin-left:auto;}
+.inc-desc{font-size:14px;color:var(--text);line-height:1.5;}
+.inc-loc{font-size:12px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:4px;}
+.incident-form{position:fixed;inset:0;display:flex;align-items:flex-end;z-index:999;}
+.incident-form.hidden{display:none;}
+.form-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);}
+.form-popup{
+  position:relative;z-index:1;background:#fff;
+  border-radius:32px 32px 0 0;padding:28px 20px 40px;
+  width:100%;animation:slideUp .3s ease;
+}
+.form-popup h3{font-size:20px;font-weight:900;margin-bottom:20px;}
+.form-btns{display:flex;gap:12px;margin-top:8px;}
+.cancel-form-btn{
+  flex:1;padding:14px;background:#f8f8f8;border:none;border-radius:14px;
+  font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;color:var(--muted);
+}
+.save-form-btn{
+  flex:2;padding:14px;background:var(--red);border:none;border-radius:14px;
+  font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;color:#fff;
+}
+
+/* ══════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════ */
+.settings-wrap{padding:0 16px;display:flex;flex-direction:column;gap:16px;}
+.settings-group{
+  background:#fff;border-radius:24px;padding:20px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);
+}
+.settings-group h3{font-size:14px;font-weight:900;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:15px;font-weight:700;border-bottom:1px solid #f0f0f0;}
+.toggle-row:last-child{border:none;}
+.tgl{position:relative;display:inline-block;width:50px;height:28px;}
+.tgl input{opacity:0;width:0;height:0;}
+.tgl-slider{position:absolute;cursor:pointer;inset:0;background:#ddd;border-radius:99px;transition:.3s;}
+.tgl-slider::before{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;left:3px;bottom:3px;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,0.2);}
+input:checked+.tgl-slider{background:var(--red);}
+input:checked+.tgl-slider::before{transform:translateX(22px);}
+
+/* ══════════════════════════════════════
+   BIG BUTTON (shared)
+══════════════════════════════════════ */
+.big-btn{
+  width:100%;padding:17px;
+  background:linear-gradient(135deg,var(--red3),var(--red2));
+  border:none;border-radius:18px;color:#fff;
+  font-size:16px;font-weight:800;cursor:pointer;
+  font-family:'Nunito',sans-serif;
+  box-shadow:0 8px 24px rgba(230,57,70,0.3);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .15s,box-shadow .15s;
+}
+.big-btn:active{transform:scale(0.97);}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  background:#1a1a2e;color:#fff;padding:12px 22px;border-radius:99px;
+  font-size:14px;font-weight:700;z-index:9999;white-space:nowrap;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);animation:fadeUp .3s ease;
+}
+.toast.hidden{display:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+/* ══════════════════════════════════════
+   PHOTOS GALLERY
+══════════════════════════════════════ */
+.photo-grid {
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.photo-item {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #111;
+  aspect-ratio: 16/9;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+.photo-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.photo-time {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 4px 8px;
+}
+.no-photos {
+  grid-column: 1/-1;
+  text-align: center; padding: 48px 20px; color: var(--muted);
+}
+.no-photos .icon { font-size: 56px; margin-bottom: 14px; }
+
+/* ══════════════════════════════════════
+   ADD CONTACT MODAL
+══════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 999;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+}
+.modal-overlay.hidden { display: none; }
+.modal-card {
+  background: #fff;
+  border-radius: 32px 32px 0 0;
+  padding: 28px 20px 44px;
+  width: 100%; max-width: 420px;
+  animation: slideUp .35s ease;
+}
+.modal-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-header h3 { font-size: 20px; font-weight: 900; }
+.modal-close {
+  width: 36px; height: 36px;
+  background: #f0f0f0; border: none;
+  border-radius: 10px; cursor: pointer;
+  font-size: 16px; color: var(--muted);
+}
+.modal-btns {
+  display: flex; gap: 12px; margin-top: 8px;
+}
+
+/* ══════════════════════════════════════
+   WHATSAPP BUTTON IN CONTACTS
+══════════════════════════════════════ */
+.c-wa {
+  width: 36px; height: 36px;
+  border: none; border-radius: 10px;
+  cursor: pointer; font-size: 16px;
+  background: #25d366; color: #fff;
+}
+
+/* ══════════════════════════════════════
+   CITY LABEL IN POLICE
+══════════════════════════════════════ */
+.city-label {
+  font-size: 13px; font-weight: 900;
+  color: var(--red); text-transform: uppercase;
+  letter-spacing: 1px; padding: 4px 0 8px;
+}
+
+</style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ SPLASH ══ -->
+<div id="splash" class="screen active">
+  <div class="splash-orb orb1"></div>
+  <div class="splash-orb orb2"></div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="logo-ring"></div>
+      <span class="logo-emoji">🛡️</span>
+    </div>
+    <h1 class="splash-title">SafeHer</h1>
+    <p class="splash-tagline">Your Personal Safety Guardian</p>
+    <div class="splash-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ LOGIN ══ -->
+<div id="login" class="screen">
+  <div class="login-bg"></div>
+  <div class="login-content">
+    <div class="login-logo">
+      <span>🛡️</span>
+      <h2>SafeHer</h2>
+    </div>
+    <h3 class="login-title">Set Up Your Profile</h3>
+    <p class="login-sub">Data is stored only on your device — private & secure</p>
+    <div class="login-form">
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Your Full Name</label>
+        <input type="text" id="loginName" placeholder="e.g. Priya Sharma"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-phone"></i> Phone Number</label>
+        <input type="tel" id="loginPhone" placeholder="+91 XXXXX XXXXX"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fab fa-whatsapp"></i> WhatsApp Number (if different)</label>
+        <input type="tel" id="loginWhatsapp" placeholder="Same as phone? Leave blank"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-city"></i> Your City</label>
+        <input type="text" id="loginCity" placeholder="e.g. Mumbai, Delhi, Bangalore"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-tint"></i> Blood Group</label>
+        <select id="loginBlood">
+          <option value="">Select blood group</option>
+          <option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option>
+          <option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-comment-alt"></i> Emergency Message</label>
+        <textarea id="loginMsg" rows="2" placeholder="Message to send in emergency...">I need help! This is an emergency. Please contact me immediately.</textarea>
+      </div>
+      <button class="login-btn" onclick="saveProfile()">
+        <i class="fas fa-shield-alt"></i> Start Using SafeHer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ HOME ══ -->
+<div id="home" class="screen">
+  <div class="home-header">
+    <div class="user-greet">
+      <div class="user-avatar">👩</div>
+      <div>
+        <p class="greet-text">Stay Safe,</p>
+        <h2 class="greet-name" id="homeName">User</h2>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="hdr-btn" onclick="showScreen('checkin')" title="Check-in Timer"><i class="fas fa-clock"></i></button>
+      <button class="hdr-btn" onclick="showScreen('settings')" title="Settings"><i class="fas fa-cog"></i></button>
+    </div>
+  </div>
+
+  <!-- SOS CARD -->
+  <div class="sos-card">
+    <p class="sos-card-label">Emergency?</p>
+    <p class="sos-card-sub">Hold button for 2 seconds to activate SOS</p>
+    <div class="sos-scene">
+      <div class="sos-pulse-ring r1"></div>
+      <div class="sos-pulse-ring r2"></div>
+      <div class="sos-pulse-ring r3"></div>
+      <div class="sos-3d-wrap">
+        <button class="sos-3d-btn" id="sosBtn">
+          <div class="sos-3d-top">
+            <span class="sos-label">SOS</span>
+            <div class="sos-progress-ring">
+              <svg viewBox="0 0 100 100">
+                <circle class="sos-ring-bg" cx="50" cy="50" r="45"/>
+                <circle class="sos-ring-fill" id="sosRingFill" cx="50" cy="50" r="45"/>
+              </svg>
+            </div>
+          </div>
+          <div class="sos-3d-side"></div>
+        </button>
+      </div>
+    </div>
+    <div class="loc-pill">
+      <i class="fas fa-map-marker-alt"></i>
+      <span id="currentAddress">Fetching location...</span>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="section-wrap">
+    <h3 class="sec-title">Quick Actions</h3>
+    <div class="actions-row">
+      <button class="act-btn" onclick="showScreen('fakecall')">
+        <div class="act-ico a-red"><i class="fas fa-phone-alt"></i></div>
+        <span>Fake Call</span>
+      </button>
+      <button class="act-btn" onclick="showScreen('contacts')">
+        <div class="act-ico a-pink"><i class="fas fa-users"></i></div>
+        <span>Contacts</span>
+      </button>
+      <button class="act-btn" onclick="showScreen('police')">
+        <div class="act-ico a-blue"><i class="fas fa-shield-alt"></i></div>
+        <span>Police</span>
+      </button>
+      <button class="act-btn" onclick="showScreen('incidents')">
+        <div class="act-ico a-orange"><i class="fas fa-file-alt"></i></div>
+        <span>Reports</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CHECK-IN BANNER -->
+  <div class="checkin-banner" onclick="showScreen('checkin')">
+    <div class="checkin-icon"><i class="fas fa-clock"></i></div>
+    <div>
+      <p class="checkin-title">Safety Check-In</p>
+      <p class="checkin-sub">Set timer — auto SOS if you don't respond</p>
+    </div>
+    <i class="fas fa-chevron-right checkin-arrow"></i>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="showScreen('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-btn" onclick="showScreen('map')"><i class="fas fa-map"></i><span>Map</span></button>
+    <button class="nav-btn" onclick="showScreen('contacts')"><i class="fas fa-users"></i><span>Contacts</span></button>
+    <button class="nav-btn" onclick="showScreen('incidents')"><i class="fas fa-file-alt"></i><span>Reports</span></button>
+    <button class="nav-btn" onclick="showScreen('settings')"><i class="fas fa-cog"></i><span>Settings</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SOS ACTIVE ══ -->
+<div id="sos-active" class="screen">
+  <div class="sos-active-bg">
+    <div class="sos-wave w1"></div>
+    <div class="sos-wave w2"></div>
+  </div>
+  <div class="sos-active-body">
+    <div class="sos-ambulance">🚑</div>
+    <h2>Help is On the Way!</h2>
+    <p>Stay calm. Responders have been alerted.<br/>Keep your phone with you.</p>
+    <div class="alert-checklist">
+      <div class="chk-item" id="chk-sms"><span class="chk-dot"></span>SMS Sent</div>
+      <div class="chk-item" id="chk-wa"><span class="chk-dot"></span>WhatsApp Alert + Location</div>
+      <div class="chk-item" id="chk-loc"><span class="chk-dot"></span>Location Shared</div>
+      <div class="chk-item" id="chk-photo"><span class="chk-dot"></span>3 Photos Captured</div>
+      <div class="chk-item" id="chk-audio"><span class="chk-dot"></span>Audio Recording</div>
+    </div>
+    <div class="sos-timer-display">
+      <i class="fas fa-clock"></i>&nbsp; SOS Active: <span id="sosActiveTimer">00:00</span>
+    </div>
+    <button class="btn-cancel-sos" onclick="cancelSOS()">Cancel SOS</button>
+    <button class="btn-see-map" onclick="showScreen('map')">See on Map</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ MAP ══ -->
+<div id="map" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Safe Route</h2>
+    <button class="hdr-btn" onclick="shareLocation()"><i class="fas fa-share-alt"></i></button>
+  </div>
+  <div id="mapContainer" class="map-box">
+    <div class="map-ph"><i class="fas fa-map-marked-alt"></i><p>Loading Map...</p></div>
+  </div>
+  <div class="map-card">
+    <div class="map-card-row">
+      <div class="map-avatar">👮‍♀️</div>
+      <div>
+        <p class="map-name">Nearest Police Station</p>
+        <p class="map-dist" id="policeDistance">Calculating...</p>
+      </div>
+      <button class="call-pill" onclick="callPolice()"><i class="fas fa-phone"></i> 112</button>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-btn active"><i class="fas fa-map"></i><span>Map</span></button>
+    <button class="nav-btn" onclick="showScreen('contacts')"><i class="fas fa-users"></i><span>Contacts</span></button>
+    <button class="nav-btn" onclick="showScreen('incidents')"><i class="fas fa-file-alt"></i><span>Reports</span></button>
+    <button class="nav-btn" onclick="showScreen('settings')"><i class="fas fa-cog"></i><span>Settings</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ CONTACTS ══ -->
+<div id="contacts" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Trusted Contacts</h2>
+    <button class="add-btn" onclick="addContact()"><i class="fas fa-plus"></i></button>
+  </div>
+  <div id="contactsList" class="contacts-wrap"></div>
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-btn" onclick="showScreen('map')"><i class="fas fa-map"></i><span>Map</span></button>
+    <button class="nav-btn active"><i class="fas fa-users"></i><span>Contacts</span></button>
+    <button class="nav-btn" onclick="showScreen('incidents')"><i class="fas fa-file-alt"></i><span>Reports</span></button>
+    <button class="nav-btn" onclick="showScreen('settings')"><i class="fas fa-cog"></i><span>Settings</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ FAKE CALL ══ -->
+<div id="fakecall" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Fake Call</h2>
+  </div>
+  <div class="fakecall-wrap">
+    <div class="fakecall-illus">📱</div>
+    <p class="fakecall-desc">Schedule a fake incoming call to escape uncomfortable situations safely.</p>
+    <div class="form-group"><label><i class="fas fa-user"></i> Caller Name</label>
+      <input type="text" id="callerName" value="Mom"/></div>
+    <div class="form-group"><label><i class="fas fa-clock"></i> Delay (seconds)</label>
+      <input type="number" id="callDelay" value="5" min="1" max="60"/></div>
+    <button class="big-btn" onclick="scheduleFakeCall()"><i class="fas fa-phone"></i> Schedule Fake Call</button>
+  </div>
+  <!-- Incoming Call -->
+  <div id="incomingCall" class="call-screen hidden">
+    <div class="call-backdrop"></div>
+    <div class="call-card">
+      <div class="call-avatar-big">👩</div>
+      <h3 id="incomingName">Mom</h3>
+      <p class="call-status-text">Incoming Call...</p>
+      <div class="call-btns">
+        <button class="call-decline" onclick="endFakeCall()"><i class="fas fa-phone-slash"></i></button>
+        <button class="call-accept" onclick="acceptFakeCall()"><i class="fas fa-phone"></i></button>
+      </div>
+    </div>
+  </div>
+  <!-- Active Call -->
+  <div id="activeCall" class="call-screen hidden dark-call">
+    <div class="call-card dark-card">
+      <div class="call-avatar-big">👩</div>
+      <h3 id="activeCallerName" style="color:white">Mom</h3>
+      <p class="call-timer" id="callTimer">00:00</p>
+      <div class="call-btns">
+        <button class="call-mute"><i class="fas fa-microphone-slash"></i></button>
+        <button class="call-decline" onclick="endFakeCall()"><i class="fas fa-phone-slash"></i></button>
+        <button class="call-speaker"><i class="fas fa-volume-up"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ POLICE ══ -->
+<div id="police" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Nearby Police</h2>
+  </div>
+  <div class="police-wrap">
+    <button class="big-btn" style="background:linear-gradient(135deg,#ff4444,#cc0000)" onclick="callPolice()">
+      <i class="fas fa-phone"></i> Call 112 — Emergency
+    </button>
+    <button class="big-btn outline-btn" onclick="callWomen()">
+      <i class="fas fa-female"></i> Call 1091 — Women Helpline
+    </button>
+    <button class="big-btn outline-btn" onclick="callAmbulance()">
+      <i class="fas fa-ambulance"></i> Call 108 — Ambulance
+    </button>
+    <div id="policeList" class="police-list">
+      <div style="text-align:center;padding:20px;color:#8d99ae">
+        <i class="fas fa-spinner fa-spin" style="font-size:24px"></i>
+        <p style="margin-top:8px;font-weight:700">Detecting your city...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ CHECK-IN ══ -->
+<div id="checkin" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Safety Check-In</h2>
+  </div>
+  <div class="checkin-wrap">
+    <div class="checkin-illus">⏱️</div>
+    <p class="checkin-info">Set a timer. If you don't check in before it ends, SafeHer will automatically send SOS to all your trusted contacts.</p>
+    <div class="form-group"><label><i class="fas fa-clock"></i> Timer Duration</label>
+      <select id="checkinDuration">
+        <option value="5">5 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="15" selected>15 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+      </select>
+    </div>
+    <div class="form-group"><label><i class="fas fa-comment"></i> Custom Message</label>
+      <input type="text" id="checkinMsg" value="I'm heading home safely"/>
+    </div>
+    <div id="checkinActive" class="checkin-active hidden">
+      <div class="checkin-countdown" id="checkinCountdown">15:00</div>
+      <p class="checkin-running">Timer is running — tap I'm Safe to stop</p>
+      <button class="safe-btn" onclick="checkInSafe()"><i class="fas fa-check"></i> I'm Safe!</button>
+      <button class="stop-btn" onclick="stopCheckin()">Stop Timer</button>
+    </div>
+    <div id="checkinStart">
+      <button class="big-btn" onclick="startCheckin()"><i class="fas fa-play"></i> Start Check-In Timer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ INCIDENTS ══ -->
+<div id="incidents" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Reports</h2>
+    <button class="hdr-btn" onclick="showScreen('photos')" title="SOS Photos"><i class="fas fa-camera"></i></button>
+    <button class="add-btn" onclick="showNewIncident()"><i class="fas fa-plus"></i></button>
+  </div>
+  <div id="incidentsList" class="incidents-wrap"></div>
+  <!-- New Incident Form -->
+  <div id="newIncidentForm" class="incident-form hidden">
+    <div class="form-overlay" onclick="hideNewIncident()"></div>
+    <div class="form-popup">
+      <h3>New Incident Report</h3>
+      <div class="form-group"><label>Incident Type</label>
+        <select id="incType">
+          <option>Harassment</option><option>Stalking</option>
+          <option>Theft</option><option>Assault</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Description</label>
+        <textarea id="incDesc" rows="3" placeholder="Describe what happened..."></textarea>
+      </div>
+      <div class="form-group"><label>Location</label>
+        <input type="text" id="incLocation" placeholder="Where did this happen?"/>
+      </div>
+      <div class="form-btns">
+        <button class="cancel-form-btn" onclick="hideNewIncident()">Cancel</button>
+        <button class="save-form-btn" onclick="saveIncident()">Save Report</button>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-btn" onclick="showScreen('map')"><i class="fas fa-map"></i><span>Map</span></button>
+    <button class="nav-btn" onclick="showScreen('contacts')"><i class="fas fa-users"></i><span>Contacts</span></button>
+    <button class="nav-btn active"><i class="fas fa-file-alt"></i><span>Reports</span></button>
+    <button class="nav-btn" onclick="showScreen('settings')"><i class="fas fa-cog"></i><span>Settings</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ PHOTOS ══ -->
+<div id="photos" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('incidents')"><i class="fas fa-arrow-left"></i></button>
+    <h2>SOS Photos</h2>
+    <button class="hdr-btn" onclick="clearSOSPhotos()" title="Clear All"><i class="fas fa-trash"></i></button>
+  </div>
+  <div id="photoGrid" class="photo-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════ SETTINGS ══ -->
+<div id="settings" class="screen">
+  <div class="screen-hdr">
+    <button class="back-btn" onclick="showScreen('home')"><i class="fas fa-arrow-left"></i></button>
+    <h2>Settings</h2>
+  </div>
+  <div class="settings-wrap">
+    <div class="settings-group">
+      <h3>Profile</h3>
+      <div class="form-group"><label>Name</label><input type="text" id="settingName"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="settingPhone"/></div>
+      <div class="form-group"><label>WhatsApp Number</label><input type="tel" id="settingWhatsapp"/></div>
+      <div class="form-group"><label>City</label><input type="text" id="settingCity"/></div>
+      <div class="form-group"><label>Blood Group</label>
+        <select id="settingBlood">
+          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Emergency Message</label>
+        <textarea id="settingMsg" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3>Features</h3>
+      <div class="toggle-row"><span>Shake to SOS</span>
+        <label class="tgl"><input type="checkbox" id="shakeToggle" checked onchange="toggleShake(this)"/><span class="tgl-slider"></span></label>
+      </div>
+      <div class="toggle-row"><span>Battery Low Alert</span>
+        <label class="tgl"><input type="checkbox" id="batteryToggle" checked onchange="toggleBattery(this)"/><span class="tgl-slider"></span></label>
+      </div>
+      <div class="toggle-row"><span>Auto Photo on SOS</span>
+        <label class="tgl"><input type="checkbox" id="photoToggle" checked/><span class="tgl-slider"></span></label>
+      </div>
+      <div class="toggle-row"><span>Audio Recording on SOS</span>
+        <label class="tgl"><input type="checkbox" id="audioToggle" checked/><span class="tgl-slider"></span></label>
+      </div>
+    </div>
+    <button class="big-btn" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+    <button class="big-btn outline-btn" style="margin-top:10px" onclick="resetApp()">
+      <i class="fas fa-redo"></i> Reset App
+    </button>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-btn" onclick="showScreen('map')"><i class="fas fa-map"></i><span>Map</span></button>
+    <button class="nav-btn" onclick="showScreen('contacts')"><i class="fas fa-users"></i><span>Contacts</span></button>
+    <button class="nav-btn" onclick="showScreen('incidents')"><i class="fas fa-file-alt"></i><span>Reports</span></button>
+    <button class="nav-btn active"><i class="fas fa-cog"></i><span>Settings</span></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ ADD CONTACT MODAL ══ -->
+<div id="addContactModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Add Trusted Contact</h3>
+      <button class="modal-close" onclick="closeAddContact()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Contact Name</label>
+      <input type="text" id="newContactName" placeholder="e.g. Mom, Sister, Friend"/>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-phone"></i> Phone Number</label>
+      <input type="tel" id="newContactPhone" placeholder="+91 XXXXX XXXXX"/>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-heart"></i> Relation</label>
+      <select id="newContactRelation">
+        <option value="👩">👩 Mother</option>
+        <option value="👧">👧 Sister</option>
+        <option value="👨">👨 Father</option>
+        <option value="👦">👦 Brother</option>
+        <option value="💑">💑 Partner</option>
+        <option value="👫">👫 Friend</option>
+        <option value="🧑">🧑 Other</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="cancel-form-btn" onclick="closeAddContact()">Cancel</button>
+      <button class="save-form-btn" onclick="saveNewContact()">
+        <i class="fas fa-check"></i> Add Contact
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+
+<!-- ADD CONTACT MODAL -->
+<div id="addContactModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Add Trusted Contact</h3>
+      <button class="modal-close" onclick="closeAddContact()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Contact Name</label>
+      <input type="text" id="newContactName" placeholder="e.g. Mom, Sister, Friend"/>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-phone"></i> Phone Number</label>
+      <input type="tel" id="newContactPhone" placeholder="+91 XXXXX XXXXX"/>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-heart"></i> Relation</label>
+      <select id="newContactRelation">
+        <option value="👩">👩 Mother</option>
+        <option value="👧">👧 Sister</option>
+        <option value="👨">👨 Father</option>
+        <option value="👦">👦 Brother</option>
+        <option value="💑">💑 Partner</option>
+        <option value="👫">👫 Friend</option>
+        <option value="🧑">🧑 Other</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="cancel-form-btn" onclick="closeAddContact()">Cancel</button>
+      <button class="save-form-btn" onclick="saveNewContact()">
+        <i class="fas fa-check"></i> Add Contact
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- HOW IT WORKS POPUP -->
+<div id="howItWorks" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>🆘 SOS Kaise Kaam Karta Hai</h3>
+      <button class="modal-close" onclick="document.getElementById('howItWorks').classList.add('hidden')"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="font-size:14px;line-height:1.8;color:#2b2d42">
+      <p><b>Step 1:</b> 📍 GPS location milti hai</p>
+      <p><b>Step 2:</b> 📲 WhatsApp app khulega — <b>SEND dabao</b></p>
+      <p><b>Step 3:</b> 💬 SMS app khulega — <b>SEND dabao</b></p>
+      <p><b>Step 4:</b> 📞 Contact ko call hogi</p>
+      <p><b>Step 5:</b> 📸 3 photos auto save</p>
+      <br/>
+      <div style="background:#fff3cd;padding:12px;border-radius:12px;font-size:13px">
+        ⚠️ <b>Note:</b> Browser se directly message nahi jata — WhatsApp/SMS app khulega aur aapko sirf <b>Send button</b> dabana hoga. Yeh phone ka security rule hai.
+      </div>
+    </div>
+    <button class="save-form-btn" style="margin-top:16px;width:100%" onclick="document.getElementById('howItWorks').classList.add('hidden')">Samajh Gaya!</button>
+  </div>
+</div>
+
+<script>
+// ===== app.js =====
+
+// ===== app.js =====
+// ===== APP.JS v4 — Fixed =====
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  if (id === 'police') setTimeout(loadNearbyPolice, 100);
+  if (id === 'photos') setTimeout(renderSOSPhotos, 100);
+  if (id === 'contacts') setTimeout(renderContacts, 100);
+  if (id === 'incidents') setTimeout(renderIncidents, 100);
+}
+
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.add('hidden'), duration);
+}
+
+// ══════════════════════════════════
+// SAVE PROFILE (Login Screen)
+// ══════════════════════════════════
+function saveProfile() {
+  const name = document.getElementById('loginName').value.trim();
+  const phone = document.getElementById('loginPhone').value.trim();
+  const whatsapp = document.getElementById('loginWhatsapp').value.trim();
+  const city = document.getElementById('loginCity').value.trim();
+  const blood = document.getElementById('loginBlood').value;
+  const msg = document.getElementById('loginMsg').value.trim();
+
+  if (!name) { showToast('⚠️ Apna naam enter karo'); return; }
+  if (!phone) { showToast('⚠️ Phone number enter karo'); return; }
+
+  localStorage.setItem('userName', name);
+  localStorage.setItem('userPhone', phone);
+  localStorage.setItem('userWhatsapp', whatsapp || phone);
+  localStorage.setItem('userCity', city.toLowerCase());
+  localStorage.setItem('userBlood', blood);
+  localStorage.setItem('emergencyMsg', msg || 'I need help! Emergency!');
+  localStorage.setItem('profileDone', '1');
+
+  updateHomeProfile();
+  // Request permanent location permission
+  requestLocationPermission();
+  showScreen('home');
+  showToast('✅ Profile saved! Stay safe 🛡️');
+}
+
+// ══════════════════════════════════
+// LOCATION PERMISSION — ASK ONCE
+// ══════════════════════════════════
+function requestLocationPermission() {
+  if (!navigator.geolocation) return;
+  // Ask once — browser will remember if user clicks "Allow"
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      localStorage.setItem('locationGranted', '1');
+      console.log('✅ Location permission granted');
+    },
+    err => {
+      console.log('Location denied:', err.message);
+    },
+    { enableHighAccuracy: true }
+  );
+}
+
+// ══════════════════════════════════
+// UPDATE HOME PROFILE
+// ══════════════════════════════════
+function updateHomeProfile() {
+  const name = localStorage.getItem('userName') || 'User';
+  const el = document.getElementById('homeName');
+  if (el) el.textContent = name.split(' ')[0];
+
+  // Sync settings fields
+  const fields = {
+    'settingName': 'userName',
+    'settingPhone': 'userPhone',
+    'settingWhatsapp': 'userWhatsapp',
+    'settingCity': 'userCity',
+    'settingBlood': 'userBlood',
+    'settingMsg': 'emergencyMsg',
+  };
+  Object.entries(fields).forEach(([elId, key]) => {
+    const el = document.getElementById(elId);
+    if (el) el.value = localStorage.getItem(key) || '';
+  });
+}
+
+// ══════════════════════════════════
+// SAVE SETTINGS
+// ══════════════════════════════════
+function saveSettings() {
+  const fields = {
+    'userName': 'settingName',
+    'userPhone': 'settingPhone',
+    'userWhatsapp': 'settingWhatsapp',
+    'userCity': 'settingCity',
+    'userBlood': 'settingBlood',
+    'emergencyMsg': 'settingMsg',
+  };
+  Object.entries(fields).forEach(([key, elId]) => {
+    const el = document.getElementById(elId);
+    if (el) localStorage.setItem(key, el.value);
+  });
+  updateHomeProfile();
+  showToast('✅ Settings saved!');
+}
+
+// ══════════════════════════════════
+// TOGGLES
+// ══════════════════════════════════
+function toggleShake(el) {
+  if (el.checked) { startShakeDetection(); showToast('📳 Shake SOS enabled'); }
+  else showToast('📳 Shake SOS disabled');
+}
+function toggleBattery(el) {
+  if (el.checked) { startBatteryMonitor(); showToast('🔋 Battery alert enabled'); }
+  else showToast('🔋 Battery alert disabled');
+}
+
+// ══════════════════════════════════
+// EMERGENCY CALLS
+// ══════════════════════════════════
+function callPolice() { if (confirm('Call Emergency 112?')) window.location.href = 'tel:112'; }
+function callWomen() { if (confirm('Call Women Helpline 1091?')) window.location.href = 'tel:1091'; }
+function callAmbulance() { if (confirm('Call Ambulance 108?')) window.location.href = 'tel:108'; }
+
+function shareLocation() {
+  navigator.geolocation?.getCurrentPosition(pos => {
+    const url = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+    const text = `📍 My live location: ${url}`;
+    if (navigator.share) {
+      navigator.share({ title: 'My Location — SafeHer', text, url });
+    } else {
+      navigator.clipboard?.writeText(text);
+      showToast('📍 Location link copied!');
+    }
+  });
+}
+
+// ══════════════════════════════════
+// BATTERY MONITOR
+// ══════════════════════════════════
+function startBatteryMonitor() {
+  if (!('getBattery' in navigator)) return;
+  navigator.getBattery().then(b => {
+    const check = () => {
+      if (b.level <= 0.2 && !b.charging) {
+        showToast(`🔋 Battery ${Math.round(b.level * 100)}%! Alerting contacts...`);
+        sendBatteryAlert(Math.round(b.level * 100));
+      }
+    };
+    check();
+    b.addEventListener('levelchange', check);
+  });
+}
+
+function sendBatteryAlert(pct) {
+  const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+  const name = localStorage.getItem('userName') || 'User';
+  const msg = `⚠️ SafeHer Alert!\n${name}'s phone battery is at ${pct}%.\nPlease check on them.\n— SafeHer App`;
+  contacts.forEach(c => {
+    const clean = c.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${clean}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+}
+
+// ══════════════════════════════════
+// APP INIT
+// ══════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const done = localStorage.getItem('profileDone');
+    if (done) {
+      updateHomeProfile();
+      showScreen('home');
+      startLocationTracking();
+    } else {
+      showScreen('login');
+    }
+    if (document.getElementById('shakeToggle')?.checked) startShakeDetection();
+    if (document.getElementById('batteryToggle')?.checked) startBatteryMonitor();
+    renderContacts();
+    renderIncidents();
+  }, 2600);
+});
+
+
+// ===== alarm.js =====
+// ===== ALARM.JS — SOS Emergency Sound =====
+
+let alarmCtx = null;
+let alarmNodes = [];
+let alarmRunning = false;
+
+function startEmergencyAlarm() {
+  stopEmergencyAlarm();
+  alarmRunning = true;
+
+  try {
+    alarmCtx = new (window.AudioContext || window.webkitAudioContext)();
+    playSOSSiren();
+  } catch (e) {
+    console.warn('Audio not supported:', e);
+  }
+}
+
+function playSOSSiren() {
+  if (!alarmRunning || !alarmCtx) return;
+
+  const now = alarmCtx.currentTime;
+  const duration = 0.4;
+  const gap = 0.1;
+
+  // SOS pattern: 3 short, 3 long, 3 short beeps
+  const pattern = [
+    // 3 short (S)
+    { start: 0, len: duration, freq: 1200 },
+    { start: duration + gap, len: duration, freq: 1200 },
+    { start: (duration + gap) * 2, len: duration, freq: 1200 },
+    // 3 long (O)
+    { start: (duration + gap) * 3 + 0.2, len: duration * 2, freq: 880 },
+    { start: (duration + gap) * 3 + 0.2 + (duration * 2 + gap), len: duration * 2, freq: 880 },
+    { start: (duration + gap) * 3 + 0.2 + (duration * 2 + gap) * 2, len: duration * 2, freq: 880 },
+    // 3 short (S)
+    { start: (duration + gap) * 3 + 0.2 + (duration * 2 + gap) * 3 + 0.2, len: duration, freq: 1200 },
+    { start: (duration + gap) * 3 + 0.2 + (duration * 2 + gap) * 3 + 0.2 + (duration + gap), len: duration, freq: 1200 },
+    { start: (duration + gap) * 3 + 0.2 + (duration * 2 + gap) * 3 + 0.2 + (duration + gap) * 2, len: duration, freq: 1200 },
+  ];
+
+  let totalDuration = 0;
+  pattern.forEach(({ start, len, freq }) => {
+    const osc = alarmCtx.createOscillator();
+    const gain = alarmCtx.createGain();
+    const distortion = alarmCtx.createWaveShaper();
+
+    // Make it sound harsh/urgent
+    distortion.curve = makeDistortionCurve(200);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(freq, now + start);
+    osc.frequency.linearRampToValueAtTime(freq * 1.3, now + start + len * 0.5);
+    osc.frequency.linearRampToValueAtTime(freq, now + start + len);
+
+    gain.gain.setValueAtTime(0, now + start);
+    gain.gain.linearRampToValueAtTime(0.8, now + start + 0.02);
+    gain.gain.setValueAtTime(0.8, now + start + len - 0.02);
+    gain.gain.linearRampToValueAtTime(0, now + start + len);
+
+    osc.connect(distortion);
+    distortion.connect(gain);
+    gain.connect(alarmCtx.destination);
+
+    osc.start(now + start);
+    osc.stop(now + start + len);
+    alarmNodes.push(osc);
+
+    totalDuration = Math.max(totalDuration, start + len);
+  });
+
+  // Add continuous wail underneath
+  const wail = alarmCtx.createOscillator();
+  const wailGain = alarmCtx.createGain();
+  wail.type = 'sine';
+  wailGain.gain.value = 0.3;
+
+  for (let i = 0; i < 8; i++) {
+    const t = now + i * 0.5;
+    wail.frequency.setValueAtTime(600, t);
+    wail.frequency.linearRampToValueAtTime(1400, t + 0.25);
+    wail.frequency.linearRampToValueAtTime(600, t + 0.5);
+  }
+
+  wail.connect(wailGain);
+  wailGain.connect(alarmCtx.destination);
+  wail.start(now);
+  wail.stop(now + 4);
+  alarmNodes.push(wail);
+
+  // Repeat every 5 seconds
+  if (alarmRunning) {
+    window._alarmRepeat = setTimeout(playSOSSiren, 5000);
+  }
+}
+
+function makeDistortionCurve(amount) {
+  const samples = 256;
+  const curve = new Float32Array(samples);
+  for (let i = 0; i < samples; i++) {
+    const x = (i * 2) / samples - 1;
+    curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+  }
+  return curve;
+}
+
+function stopEmergencyAlarm() {
+  alarmRunning = false;
+  clearTimeout(window._alarmRepeat);
+  alarmNodes.forEach(n => { try { n.stop(); } catch (e) {} });
+  alarmNodes = [];
+  if (alarmCtx) {
+    alarmCtx.close().catch(() => {});
+    alarmCtx = null;
+  }
+}
+
+
+// ===== location.js =====
+// ===== LOCATION.JS =====
+window.addEventListener('load', () => {
+  setTimeout(startLocationTracking, 2700);
+});
+
+function startLocationTracking() {
+  if (!navigator.geolocation) {
+    document.getElementById('currentAddress').textContent = 'Location not supported';
+    return;
+  }
+  navigator.geolocation.watchPosition(pos => {
+    const { latitude: lat, longitude: lng } = pos.coords;
+    updateAddressDisplay(lat, lng);
+    updateMap(lat, lng);
+  }, () => {
+    document.getElementById('currentAddress').textContent = 'Enable location';
+  }, { enableHighAccuracy: true });
+}
+
+function updateAddressDisplay(lat, lng) {
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+    .then(r => r.json())
+    .then(d => {
+      const short = (d.display_name || '').split(',').slice(0, 3).join(',');
+      document.getElementById('currentAddress').textContent = short || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+    })
+    .catch(() => {
+      document.getElementById('currentAddress').textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+    });
+}
+
+function updateMap(lat, lng) {
+  const c = document.getElementById('mapContainer');
+  if (!c) return;
+  c.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${lng-.01},${lat-.01},${lng+.01},${lat+.01}&layer=mapnik&marker=${lat},${lng}" style="width:100%;height:100%;border:none;border-radius:24px;" loading="lazy"></iframe>`;
+  document.getElementById('policeDistance').textContent = '~1.2 km away';
+}
+
+
+// ===== contacts.js =====
+// ===== CONTACTS.JS v4 — Fixed =====
+
+let contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+
+// Default sample contacts
+if (contacts.length === 0) {
+  contacts = [
+    
+  ];
+  saveContacts();
+}
+
+// ══════════════════════════════════
+// RENDER CONTACTS LIST
+// ══════════════════════════════════
+function renderContacts() {
+  const list = document.getElementById('contactsList');
+  if (!list) return;
+
+  if (!contacts.length) {
+    list.innerHTML = `
+      <div style="text-align:center;padding:48px 20px;color:#8d99ae">
+        <div style="font-size:56px;margin-bottom:14px">👥</div>
+        <p style="font-size:17px;font-weight:800;color:#2b2d42">No trusted contacts yet</p>
+        <p style="font-size:13px;margin-top:6px">Tap + to add family or friends</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = contacts.map(c => `
+    <div class="contact-card" id="crd-${c.id}">
+      <div class="contact-ava">${c.emoji || c.name[0]}</div>
+      <div class="contact-info">
+        <div class="contact-name">${c.name}</div>
+        <div class="contact-phone">${c.phone}</div>
+      </div>
+      <div class="c-actions">
+        <button class="c-call" onclick="window.location.href='tel:${c.phone}'" title="Call">
+          <i class="fas fa-phone"></i>
+        </button>
+        <button class="c-wa" onclick="openWhatsApp('${c.phone}')" title="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+        <button class="c-del" onclick="deleteContact(${c.id})" title="Delete">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function openWhatsApp(phone) {
+  const clean = phone.replace(/\D/g, '');
+  window.open(`https://wa.me/${clean}`, '_blank');
+}
+
+// ══════════════════════════════════
+// ADD CONTACT — Open Modal
+// ══════════════════════════════════
+function addContact() {
+  const modal = document.getElementById('addContactModal');
+  if (!modal) {
+    showToast('❌ Modal not found!');
+    return;
+  }
+  // Clear fields
+  document.getElementById('newContactName').value = '';
+  document.getElementById('newContactPhone').value = '';
+  document.getElementById('newContactRelation').selectedIndex = 0;
+  // Show modal
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('newContactName').focus(), 300);
+}
+
+function closeAddContact() {
+  const modal = document.getElementById('addContactModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+}
+
+// ══════════════════════════════════
+// SAVE NEW CONTACT
+// ══════════════════════════════════
+function saveNewContact() {
+  const nameEl = document.getElementById('newContactName');
+  const phoneEl = document.getElementById('newContactPhone');
+  const relEl = document.getElementById('newContactRelation');
+
+  const name = nameEl.value.trim();
+  const phone = phoneEl.value.trim();
+  const emoji = relEl.value;
+
+  if (!name) { showToast('⚠️ Name enter karo'); nameEl.focus(); return; }
+  if (!phone) { showToast('⚠️ Phone number enter karo'); phoneEl.focus(); return; }
+
+  // Auto-add +91 if no country code
+  let finalPhone = phone;
+  if (!phone.startsWith('+')) {
+    finalPhone = '+91' + phone.replace(/^0+/, '');
+    showToast(`ℹ️ +91 added: ${finalPhone}`);
+  }
+
+  const newContact = {
+    id: Date.now(),
+    name,
+    phone: finalPhone,
+    emoji,
+    relation: relEl.options[relEl.selectedIndex].text.replace(emoji, '').trim()
+  };
+
+  contacts.push(newContact);
+  saveContacts();
+  renderContacts();
+  closeAddContact();
+  showToast(`✅ ${name} trusted contact me add ho gaya!`);
+}
+
+// ══════════════════════════════════
+// DELETE CONTACT
+// ══════════════════════════════════
+function deleteContact(id) {
+  const c = contacts.find(x => x.id === id);
+  if (!confirm(`${c?.name} ko remove karein trusted contacts se?`)) return;
+  contacts = contacts.filter(x => x.id !== id);
+  saveContacts();
+  renderContacts();
+  showToast('🗑️ Contact remove ho gaya');
+}
+
+function saveContacts() {
+  localStorage.setItem('cocontacts', JSON.stringify(contacts));
+}
+
+
+// ===== fakecall.js =====
+// ===== FAKECALL.JS + SHAKE =====
+let callTimerInterval = null;
+let callSecs = 0;
+
+function scheduleFakeCall() {
+  const name = document.getElementById('callerName').value || 'Mom';
+  const delay = parseInt(document.getElementById('callDelay').value) || 5;
+  showToast(`📞 Fake call in ${delay}s...`);
+  setTimeout(() => showIncomingCall(name), delay * 1000);
+}
+
+function showIncomingCall(name) {
+  document.getElementById('incomingName').textContent = name;
+  document.getElementById('incomingCall').classList.remove('hidden');
+  navigator.vibrate?.([500, 200, 500, 200, 500, 200, 500]);
+}
+
+function acceptFakeCall() {
+  const name = document.getElementById('incomingName').textContent;
+  document.getElementById('incomingCall').classList.add('hidden');
+  document.getElementById('activeCallerName').textContent = name;
+  document.getElementById('activeCall').classList.remove('hidden');
+  callSecs = 0;
+  callTimerInterval = setInterval(() => {
+    callSecs++;
+    const m = String(Math.floor(callSecs / 60)).padStart(2, '0');
+    const s = String(callSecs % 60).padStart(2, '0');
+    document.getElementById('callTimer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function endFakeCall() {
+  document.getElementById('incomingCall').classList.add('hidden');
+  document.getElementById('activeCall').classList.add('hidden');
+  clearInterval(callTimerInterval);
+  callSecs = 0;
+  showToast('📵 Call ended');
+}
+
+// ===== SHAKE DETECTION =====
+let lx = null, ly = null, lz = null;
+let shakeCooldown = false;
+
+function startShakeDetection() {
+  if (!window.DeviceMotionEvent) return;
+
+  const handler = e => {
+    const a = e.accelerationIncludingGravity;
+    if (!a || lx === null) { lx = a?.x; ly = a?.y; lz = a?.z; return; }
+    const delta = Math.abs(a.x - lx) + Math.abs(a.y - ly) + Math.abs(a.z - lz);
+    if (delta > 15 && !shakeCooldown) {
+      shakeCooldown = true;
+      showToast('📳 Shake detected — SOS in 3s...');
+      setTimeout(triggerSOS, 3000);
+      setTimeout(() => shakeCooldown = false, 12000);
+    }
+    lx = a.x; ly = a.y; lz = a.z;
+  };
+
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(r => { if (r === 'granted') window.addEventListener('devicemotion', handler); })
+      .catch(() => {});
+  } else {
+    window.addEventListener('devicemotion', handler);
+  }
+}
+
+
+// ===== checkin.js =====
+// ===== CHECKIN.JS =====
+let checkinInterval = null;
+let checkinSecondsLeft = 0;
+
+function startCheckin() {
+  const mins = parseInt(document.getElementById('checkinDuration').value) || 15;
+  checkinSecondsLeft = mins * 60;
+
+  document.getElementById('checkinStart').classList.add('hidden');
+  document.getElementById('checkinActive').classList.remove('hidden');
+
+  updateCheckinDisplay();
+  checkinInterval = setInterval(() => {
+    checkinSecondsLeft--;
+    updateCheckinDisplay();
+    if (checkinSecondsLeft <= 0) {
+      clearInterval(checkinInterval);
+      showToast('⚠️ Check-in expired! Sending SOS...');
+      setTimeout(triggerSOS, 2000);
+    }
+  }, 1000);
+
+  showToast(`⏱️ Check-in started — ${mins} minutes`);
+}
+
+function updateCheckinDisplay() {
+  const m = String(Math.floor(checkinSecondsLeft / 60)).padStart(2, '0');
+  const s = String(checkinSecondsLeft % 60).padStart(2, '0');
+  const el = document.getElementById('checkinCountdown');
+  if (el) el.textContent = `${m}:${s}`;
+}
+
+function checkInSafe() {
+  clearInterval(checkinInterval);
+  document.getElementById('checkinActive').classList.add('hidden');
+  document.getElementById('checkinStart').classList.remove('hidden');
+  showToast('✅ Checked in! You\'re safe 😊');
+}
+
+function stopCheckin() {
+  clearInterval(checkinInterval);
+  document.getElementById('checkinActive').classList.add('hidden');
+  document.getElementById('checkinStart').classList.remove('hidden');
+  showToast('⏹️ Check-in stopped');
+}
+
+
+// ===== incidents.js =====
+// ===== INCIDENTS.JS =====
+let incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+
+function renderIncidents() {
+  const wrap = document.getElementById('incidentsList');
+  if (!wrap) return;
+  if (!incidents.length) {
+    wrap.innerHTML = `<div style="text-align:center;padding:40px;color:#8d99ae"><div style="font-size:48px">📋</div><p style="font-weight:700;margin-top:12px">No reports yet</p><p style="font-size:13px;margin-top:6px">Tap + to add an incident report</p></div>`;
+    return;
+  }
+  wrap.innerHTML = incidents.slice().reverse().map(inc => `
+    <div class="incident-card">
+      <div class="inc-header">
+        <span class="inc-badge">${inc.type}</span>
+        <span class="inc-date">${new Date(inc.date).toLocaleDateString()}</span>
+      </div>
+      <p class="inc-desc">${inc.desc}</p>
+      <p class="inc-loc"><i class="fas fa-map-marker-alt" style="color:var(--red)"></i> ${inc.location || 'Unknown location'}</p>
+    </div>`).join('');
+}
+
+function showNewIncident() {
+  document.getElementById('newIncidentForm').classList.remove('hidden');
+}
+
+function hideNewIncident() {
+  document.getElementById('newIncidentForm').classList.add('hidden');
+}
+
+function saveIncident() {
+  const type = document.getElementById('incType').value;
+  const desc = document.getElementById('incDesc').value.trim();
+  const location = document.getElementById('incLocation').value.trim();
+
+  if (!desc) { showToast('⚠️ Please describe the incident'); return; }
+
+  incidents.push({ id: Date.now(), type, desc, location, date: new Date().toISOString() });
+  localStorage.setItem('incidents', JSON.stringify(incidents));
+  hideNewIncident();
+  renderIncidents();
+
+  // Clear form
+  document.getElementById('incDesc').value = '';
+  document.getElementById('incLocation').value = '';
+
+  showToast('✅ Incident report saved');
+}
+
+// ===== SOS PHOTOS GALLERY =====
+function renderSOSPhotos() {
+  const grid = document.getElementById('photoGrid');
+  if (!grid) return;
+  const photos = JSON.parse(localStorage.getItem('sosPhotos') || '[]');
+  if (!photos.length) {
+    grid.innerHTML = `<div class="no-photos"><div class="icon">📷</div><p style="font-weight:700">No SOS photos yet</p><p style="font-size:13px;margin-top:6px">Photos are auto-captured when SOS is activated</p></div>`;
+    return;
+  }
+  grid.innerHTML = photos.map(p => `
+    <div class="photo-item">
+      <img src="${p.data}" alt="SOS Photo"/>
+      <div class="photo-time">${new Date(p.time).toLocaleString()}</div>
+    </div>`).join('');
+}
+
+function clearSOSPhotos() {
+  if (!confirm('Delete all SOS photos?')) return;
+  localStorage.removeItem('sosPhotos');
+  renderSOSPhotos();
+  showToast('🗑️ Photos cleared');
+}
+
+
+// ===== police.js =====
+// ===== POLICE.JS — City-wise Police Stations =====
+
+const POLICE_DB = {
+  // Maharashtra
+  "mumbai": [
+    { name: "Colaba Police Station", phone: "02222151503", area: "Colaba, South Mumbai" },
+    { name: "Bandra Police Station", phone: "02226400312", area: "Bandra West" },
+    { name: "Andheri Police Station", phone: "02226208312", area: "Andheri West" },
+    { name: "Dadar Police Station", phone: "02224137700", area: "Dadar" },
+    { name: "Kurla Police Station", phone: "02225242200", area: "Kurla" },
+    { name: "Borivali Police Station", phone: "02228945234", area: "Borivali" },
+  ],
+  "pune": [
+    { name: "Shivajinagar Police Station", phone: "02025536336", area: "Shivajinagar" },
+    { name: "Koregaon Park Police Station", phone: "02026615100", area: "Koregaon Park" },
+    { name: "Hadapsar Police Station", phone: "02026871233", area: "Hadapsar" },
+    { name: "Kothrud Police Station", phone: "02025384433", area: "Kothrud" },
+  ],
+  // Delhi
+  "delhi": [
+    { name: "Connaught Place Police Station", phone: "01123413396", area: "Connaught Place" },
+    { name: "Lajpat Nagar Police Station", phone: "01129834100", area: "Lajpat Nagar" },
+    { name: "Dwarka Police Station", phone: "01125083100", area: "Dwarka" },
+    { name: "Rohini Police Station", phone: "01127052100", area: "Rohini" },
+    { name: "Saket Police Station", phone: "01126963100", area: "Saket" },
+    { name: "Janakpuri Police Station", phone: "01125544100", area: "Janakpuri" },
+  ],
+  // Karnataka
+  "bangalore": [
+    { name: "Cubbon Park Police Station", phone: "08022942222", area: "Cubbon Park" },
+    { name: "Koramangala Police Station", phone: "08025534585", area: "Koramangala" },
+    { name: "Whitefield Police Station", phone: "08028454585", area: "Whitefield" },
+    { name: "Indiranagar Police Station", phone: "08025285585", area: "Indiranagar" },
+  ],
+  // Tamil Nadu
+  "chennai": [
+    { name: "Anna Nagar Police Station", phone: "04426161100", area: "Anna Nagar" },
+    { name: "T Nagar Police Station", phone: "04424340100", area: "T Nagar" },
+    { name: "Adyar Police Station", phone: "04424410100", area: "Adyar" },
+    { name: "Velachery Police Station", phone: "04422432100", area: "Velachery" },
+  ],
+  // Telangana
+  "hyderabad": [
+    { name: "Banjara Hills Police Station", phone: "04023545353", area: "Banjara Hills" },
+    { name: "Jubilee Hills Police Station", phone: "04023600100", area: "Jubilee Hills" },
+    { name: "Secunderabad Police Station", phone: "04027804100", area: "Secunderabad" },
+    { name: "LB Nagar Police Station", phone: "04024055100", area: "LB Nagar" },
+  ],
+  // Gujarat
+  "ahmedabad": [
+    { name: "Navrangpura Police Station", phone: "07926561000", area: "Navrangpura" },
+    { name: "Satellite Police Station", phone: "07926752100", area: "Satellite" },
+    { name: "Maninagar Police Station", phone: "07922751100", area: "Maninagar" },
+  ],
+  // Rajasthan
+  "jaipur": [
+    { name: "Malviya Nagar Police Station", phone: "01412743100", area: "Malviya Nagar" },
+    { name: "Vaishali Nagar Police Station", phone: "01412353100", area: "Vaishali Nagar" },
+    { name: "Mansarovar Police Station", phone: "01412781100", area: "Mansarovar" },
+  ],
+  // Uttar Pradesh
+  "lucknow": [
+    { name: "Hazratganj Police Station", phone: "05222204100", area: "Hazratganj" },
+    { name: "Gomtinagar Police Station", phone: "05222731100", area: "Gomtinagar" },
+    { name: "Aliganj Police Station", phone: "05222324100", area: "Aliganj" },
+  ],
+  // West Bengal
+  "kolkata": [
+    { name: "Park Street Police Station", phone: "03322270101", area: "Park Street" },
+    { name: "Salt Lake Police Station", phone: "03323378100", area: "Salt Lake" },
+    { name: "New Town Police Station", phone: "03329089100", area: "New Town" },
+  ],
+  // Default fallback
+  "default": [
+    { name: "National Emergency", phone: "112", area: "All India" },
+    { name: "Women Helpline", phone: "1091", area: "All India" },
+    { name: "Police Helpline", phone: "100", area: "All India" },
+    { name: "Ambulance", phone: "108", area: "All India" },
+  ]
+};
+
+let detectedCity = null;
+
+function detectCityFromCoords(lat, lng) {
+  // Use reverse geocoding to get city
+  return fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+    .then(r => r.json())
+    .then(data => {
+      const addr = data.address || {};
+      const city = (addr.city || addr.town || addr.village || addr.county || '').toLowerCase();
+
+      // Match to our DB
+      for (const key of Object.keys(POLICE_DB)) {
+        if (city.includes(key) || key.includes(city.split(' ')[0])) {
+          detectedCity = key;
+          return key;
+        }
+      }
+      detectedCity = 'default';
+      return 'default';
+    })
+    .catch(() => 'default');
+}
+
+function renderPoliceStations(cityKey) {
+  const list = document.getElementById('policeList');
+  if (!list) return;
+
+  const stations = POLICE_DB[cityKey] || POLICE_DB['default'];
+  const cityLabel = cityKey === 'default' ? 'National Helplines' : cityKey.charAt(0).toUpperCase() + cityKey.slice(1);
+
+  list.innerHTML = `
+    <div class="city-label">📍 ${cityLabel}</div>
+    ${stations.map(s => `
+      <div class="police-card">
+        <div class="police-ico">👮</div>
+        <div style="flex:1">
+          <p class="police-name">${s.name}</p>
+          <p class="police-dist">${s.area}</p>
+        </div>
+        <button class="call-pill" onclick="window.location.href='tel:${s.phone}'">
+          <i class="fas fa-phone"></i> ${s.phone}
+        </button>
+      </div>`).join('')}`;
+}
+
+function loadNearbyPolice() {
+  const list = document.getElementById('policeList');
+  if (list) list.innerHTML = '<div style="text-align:center;padding:20px;color:#8d99ae"><i class="fas fa-spinner fa-spin" style="font-size:24px"></i><p style="margin-top:8px">Detecting your city...</p></div>';
+
+  navigator.geolocation?.getCurrentPosition(
+    async pos => {
+      const city = await detectCityFromCoords(pos.coords.latitude, pos.coords.longitude);
+      renderPoliceStations(city);
+    },
+    () => renderPoliceStations('default')
+  );
+}
+
+// Load when police screen is shown
+const origShowScreen = window.showScreen;
+document.addEventListener('DOMContentLoaded', () => {
+  const policeBtn = document.querySelector('[onclick="showScreen(\'police\')"]');
+  if (policeBtn) {
+    policeBtn.addEventListener('click', () => setTimeout(loadNearbyPolice, 100));
+  }
+});
+
+
+
+// ===== sos.js v5 =====
+// ===== SOS.JS v5 — Real WhatsApp + SMS Working =====
+
+let sosHoldInterval = null;
+let sosActiveInterval = null;
+let sosActiveSeconds = 0;
+let mediaRecorder = null;
+let audioChunks = [];
+const HOLD_MS = 2000;
+const CIRCUMFERENCE = 283;
+let sosCurrentLat = null;
+let sosCurrentLng = null;
+
+// Init SOS button
+document.addEventListener('DOMContentLoaded', initSOSButton);
+window.addEventListener('load', initSOSButton);
+
+function initSOSButton() {
+  const btn = document.getElementById('sosBtn');
+  if (!btn || btn._sosInit) return;
+  btn._sosInit = true;
+  btn.addEventListener('mousedown', startSOSHold);
+  btn.addEventListener('touchstart', e => { e.preventDefault(); startSOSHold(); }, { passive: false });
+  btn.addEventListener('mouseup', cancelSOSHold);
+  btn.addEventListener('touchend', cancelSOSHold);
+  btn.addEventListener('mouseleave', cancelSOSHold);
+}
+
+let holdProgress = 0;
+
+function startSOSHold() {
+  holdProgress = 0;
+  const ring = document.getElementById('sosRingFill');
+  if (ring) ring.style.strokeDashoffset = CIRCUMFERENCE;
+  sosHoldInterval = setInterval(() => {
+    holdProgress += 50;
+    const ring = document.getElementById('sosRingFill');
+    const offset = CIRCUMFERENCE - (holdProgress / HOLD_MS) * CIRCUMFERENCE;
+    if (ring) ring.style.strokeDashoffset = Math.max(0, offset);
+    if (navigator.vibrate && holdProgress % 400 === 0) navigator.vibrate(40);
+    if (holdProgress >= HOLD_MS) {
+      clearInterval(sosHoldInterval);
+      triggerSOS();
+    }
+  }, 50);
+}
+
+function cancelSOSHold() {
+  clearInterval(sosHoldInterval);
+  holdProgress = 0;
+  const ring = document.getElementById('sosRingFill');
+  if (ring) ring.style.strokeDashoffset = CIRCUMFERENCE;
+}
+
+// ══════════════════════════════════
+// MAIN SOS TRIGGER
+// ══════════════════════════════════
+function triggerSOS() {
+  navigator.vibrate?.([300,100,300,100,300,100,600]);
+  showScreen('sos-active');
+  resetChecklist();
+  startEmergencyAlarm();
+
+  // Start timer immediately
+  sosActiveSeconds = 0;
+  clearInterval(sosActiveInterval);
+  const timerEl = document.getElementById('sosActiveTimer');
+  if (timerEl) timerEl.textContent = '00:00';
+  sosActiveInterval = setInterval(() => {
+    sosActiveSeconds++;
+    const m = String(Math.floor(sosActiveSeconds/60)).padStart(2,'0');
+    const s = String(sosActiveSeconds%60).padStart(2,'0');
+    const el = document.getElementById('sosActiveTimer');
+    if (el) el.textContent = `${m}:${s}`;
+  }, 1000);
+
+  // Get location first
+  showToast('📍 Getting location...', 3000);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        sosCurrentLat = pos.coords.latitude;
+        sosCurrentLng = pos.coords.longitude;
+        markDone('chk-loc');
+        startSendingAlerts(sosCurrentLat, sosCurrentLng);
+      },
+      () => {
+        sosCurrentLat = null;
+        sosCurrentLng = null;
+        startSendingAlerts(null, null);
+      },
+      { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 }
+    );
+  } else {
+    startSendingAlerts(null, null);
+  }
+
+  // Photo + Audio
+  if (document.getElementById('photoToggle')?.checked) captureAutoPhotos();
+  if (document.getElementById('audioToggle')?.checked) startAudioRecording();
+}
+
+// ══════════════════════════════════
+// START SENDING ALERTS — SEQUENTIALLY
+// ══════════════════════════════════
+function startSendingAlerts(lat, lng) {
+  const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+  const name  = localStorage.getItem('userName') || 'User';
+  const blood = localStorage.getItem('userBlood') || '';
+  const msg   = localStorage.getItem('emergencyMsg') || 'I need help!';
+  const time  = new Date().toLocaleString('en-IN');
+  const mapsUrl = lat ? `https://maps.google.com/?q=${lat},${lng}` : null;
+
+  if (!contacts.length) {
+    showToast('⚠️ Koi contact nahi! Pehle contacts add karo!', 5000);
+    markDone('chk-sms');
+    markDone('chk-wa');
+    return;
+  }
+
+  // Full WhatsApp message
+  const waMsg =
+    `🆘 *EMERGENCY SOS ALERT!*\n\n` +
+    `👤 *Name:* ${name}\n` +
+    (blood ? `🩸 *Blood Group:* ${blood}\n` : '') +
+    `🕐 *Time:* ${time}\n\n` +
+    `💬 *Message:* ${msg}\n\n` +
+    (mapsUrl
+      ? `📍 *Live Location:*\n${mapsUrl}\n\nTap the link to see exact location on map.`
+      : `📍 Location could not be obtained.`) +
+    `\n\n_Sent via SafeHer Women Safety App_`;
+
+  // Short SMS message
+  const smsMsg =
+    `🆘 SOS EMERGENCY! ${name} needs help NOW!` +
+    (mapsUrl ? ` Location: ${mapsUrl}` : '') +
+    ` Time: ${time}. Please respond immediately!`;
+
+  // ── STEP 1: WhatsApp to contact 1 ──
+  showToast(`📲 WhatsApp bhej raha hoon ${contacts[0].name} ko...`, 3000);
+  setTimeout(() => {
+    sendWhatsApp(contacts[0].phone, waMsg);
+  }, 500);
+
+  // ── STEP 2: WhatsApp to remaining contacts ──
+  for (let i = 1; i < contacts.length; i++) {
+    const c = contacts[i];
+    setTimeout(() => {
+      sendWhatsApp(c.phone, waMsg);
+      showToast(`📲 WhatsApp: ${c.name}...`, 2000);
+    }, 1500 * i + 500);
+  }
+
+  // Mark WhatsApp done
+  setTimeout(() => {
+    markDone('chk-wa');
+    showToast('✅ WhatsApp alerts open ho gaye!', 3000);
+  }, contacts.length * 1500 + 1000);
+
+  // ── STEP 3: SMS to all contacts ──
+  setTimeout(() => {
+    sendSMSToAll(contacts, smsMsg);
+  }, contacts.length * 1500 + 2000);
+
+  // ── STEP 4: Call first contact ──
+  setTimeout(() => {
+    const first = contacts[0];
+    showToast(`📞 Calling ${first.name}...`, 4000);
+    setTimeout(() => {
+      window.location.href = `tel:${first.phone}`;
+    }, 2000);
+  }, contacts.length * 1500 + 4000);
+}
+
+// ══════════════════════════════════
+// SEND WHATSAPP — Opens WA with pre-filled message
+// ══════════════════════════════════
+function sendWhatsApp(phone, message) {
+  // Clean phone number
+  let clean = phone.replace(/\D/g, '');
+  // Add 91 if no country code (10 digit Indian number)
+  if (clean.length === 10) clean = '91' + clean;
+
+  const encoded = encodeURIComponent(message);
+  const url = `https://wa.me/${clean}?text=${encoded}`;
+
+  // Open WhatsApp
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ══════════════════════════════════
+// SEND SMS — Opens SMS app with message
+// ══════════════════════════════════
+function sendSMSToAll(contacts, message) {
+  const nums = contacts.map(c => {
+    let n = c.phone.replace(/\D/g,'');
+    return n;
+  }).join(',');
+
+  const encoded = encodeURIComponent(message);
+
+  // Try multiple SMS URI formats for Android/iOS
+  let smsUri;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    smsUri = `sms:${nums}&body=${encoded}`;
+  } else {
+    smsUri = `sms:${nums}?body=${encoded}`;
+  }
+
+  const a = document.createElement('a');
+  a.href = smsUri;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => {
+    markDone('chk-sms');
+    showToast('✅ SMS app open ho gaya!', 3000);
+  }, 1000);
+}
+
+// ══════════════════════════════════
+// AUTO CAPTURE 3 PHOTOS
+// ══════════════════════════════════
+function captureAutoPhotos() {
+  const constraints = [
+    { video: { facingMode: { exact:'environment' }, width:{ideal:1920}, height:{ideal:1080} } },
+    { video: { facingMode: 'environment', width:{ideal:1280}, height:{ideal:720} } },
+    { video: { width:{ideal:1280}, height:{ideal:720} } },
+  ];
+  attemptCapture(constraints, 0);
+}
+
+function attemptCapture(list, idx) {
+  if (idx >= list.length) { markDone('chk-photo'); return; }
+  navigator.mediaDevices.getUserMedia(list[idx])
+    .then(stream => {
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = true;
+      video.onloadedmetadata = () => {
+        video.play();
+        let done = 0;
+        [1500, 2800, 4200].forEach((delay, i) => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width  = video.videoWidth  || 1280;
+            canvas.height = video.videoHeight || 720;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Watermark
+            ctx.fillStyle = 'rgba(0,0,0,0.72)';
+            ctx.fillRect(0, canvas.height-52, canvas.width, 52);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 15px sans-serif';
+            ctx.fillText(`🆘 SafeHer SOS — ${new Date().toLocaleString('en-IN')}`, 12, canvas.height-18);
+            const name = localStorage.getItem('userName') || '';
+            if (name) ctx.fillText(`👤 ${name}`, canvas.width-160, canvas.height-18);
+            saveSOSPhoto(canvas.toDataURL('image/jpeg', 0.92), i+1);
+            done++;
+            if (done === 3) {
+              stream.getTracks().forEach(t => t.stop());
+              markDone('chk-photo');
+              showToast('📸 3 photos saved!');
+            }
+          }, delay);
+        });
+      };
+    })
+    .catch(() => attemptCapture(list, idx+1));
+}
+
+function saveSOSPhoto(dataURL, num) {
+  const saved = JSON.parse(localStorage.getItem('sosPhotos') || '[]');
+  saved.unshift({ id: Date.now()+num, data: dataURL, time: new Date().toISOString(), label:`SOS Photo ${num}` });
+  if (saved.length > 30) saved.splice(30);
+  localStorage.setItem('sosPhotos', JSON.stringify(saved));
+}
+
+// ══════════════════════════════════
+// AUDIO RECORDING
+// ══════════════════════════════════
+function startAudioRecording() {
+  navigator.mediaDevices?.getUserMedia({ audio: true })
+    .then(stream => {
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type:'audio/webm' });
+        const saved = JSON.parse(localStorage.getItem('sosAudio') || '[]');
+        saved.unshift({ id: Date.now(), url: URL.createObjectURL(blob), time: new Date().toISOString() });
+        if (saved.length > 10) saved.splice(10);
+        localStorage.setItem('sosAudio', JSON.stringify(saved));
+        markDone('chk-audio');
+      };
+      mediaRecorder.start(1000);
+      setTimeout(stopAudioRecording, 300000);
+    })
+    .catch(() => markDone('chk-audio'));
+}
+
+function stopAudioRecording() {
+  try {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+      mediaRecorder.stream?.getTracks().forEach(t => t.stop());
+    }
+  } catch(e) {}
+}
+
+// ══════════════════════════════════
+// CANCEL SOS
+// ══════════════════════════════════
+function cancelSOS() {
+  clearInterval(sosActiveInterval);
+  sosActiveSeconds = 0;
+  stopEmergencyAlarm();
+  stopAudioRecording();
+  const ring = document.getElementById('sosRingFill');
+  if (ring) ring.style.strokeDashoffset = CIRCUMFERENCE;
+  showScreen('home');
+  showToast('✅ SOS Cancel ho gaya');
+}
+
+function resetChecklist() {
+  ['chk-sms','chk-wa','chk-loc','chk-photo','chk-audio'].forEach(id => {
+    document.querySelector(`#${id} .chk-dot`)?.classList.remove('done');
+  });
+}
+
+function markDone(id) {
+  document.querySelector(`#${id} .chk-dot`)?.classList.add('done');
+}
+
+
+// ===== Extra CSS for modal =====
+(function addExtraStyles() {
+  const s = document.createElement('style');
+  s.textContent = `
+    .modal-overlay { position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:999;background:rgba(0,0,0,.5);backdrop-filter:blur(8px); }
+    .modal-overlay.hidden { display:none; }
+    .modal-card { background:#fff;border-radius:32px 32px 0 0;padding:28px 20px 44px;width:100%;max-width:420px;animation:slideUp .35s ease; }
+    @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .modal-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
+    .modal-header h3 { font-size:20px;font-weight:900; }
+    .modal-close { width:36px;height:36px;background:#f0f0f0;border:none;border-radius:10px;cursor:pointer;font-size:16px;color:#8d99ae; }
+    .modal-btns { display:flex;gap:12px;margin-top:16px; }
+    .cancel-form-btn { flex:1;padding:14px;background:#f0f0f0;border:none;border-radius:14px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit; }
+    .save-form-btn { flex:1;padding:14px;background:linear-gradient(135deg,#ff6b6b,#c1121f);color:#fff;border:none;border-radius:14px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit; }
+    .c-wa { width:36px;height:36px;border:none;border-radius:10px;cursor:pointer;font-size:16px;background:#25d366;color:#fff; }
+    .city-label { font-size:13px;font-weight:900;color:#E63946;text-transform:uppercase;letter-spacing:1px;padding:4px 0 8px; }
+    .photo-grid { padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .photo-item { border-radius:16px;overflow:hidden;position:relative;background:#111;aspect-ratio:16/9; }
+    .photo-item img { width:100%;height:100%;object-fit:cover; }
+    .photo-time { position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:700;padding:4px 8px; }
+  `;
+  document.head.appendChild(s);
+})();
+
+// Reset app
+function resetApp() {
+  if (confirm('App reset karein? Sab data delete ho jayega.')) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+// Show how it works
+function showHowItWorks() {
+  document.getElementById('howItWorks').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
